@@ -9,7 +9,7 @@ def preprocess(base_dir):
     '''
     base_dir --- data directory
     '''
-    data_dir = join(base_dir, 'data')
+    data_dir = join(base_dir, '/Users/mac/nkenne_test/TTS/GST-tacotron/data')
     train_dir = join(base_dir, 'train')
     test_dir = join(base_dir, 'test')
     dev_dir = join(base_dir, 'dev')

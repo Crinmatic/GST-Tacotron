@@ -20,8 +20,8 @@ multiprocess==0.70.5
 murmurhash==0.28.0
 numba==0.38.0
 numpy==1.14.3
-opencv-python==3.4.0.12
-pandas==0.22.0
+opencv-python
+pandas
 pathlib==1.0.1
 plac==0.9.6
 preshed==1.0.0
@@ -41,7 +41,7 @@ spacy==2.0.11
 termcolor==1.1.0
 thinc==6.10.2
 toolz==0.9.0
-torch==0.4.0
+torch
 tqdm==4.23.2
 ujson==1.35
 unicode==2.6

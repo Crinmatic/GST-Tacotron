@@ -1,7 +1,7 @@
 from Hyperparameters import Hyperparameters as hp
 from torch.utils.data import Dataset, DataLoader
 import torch
-
+import pandas as pd
 from utils import *
 
 import os
@@ -21,7 +21,7 @@ class SpeechDataset(Dataset):
         # fpaths, texts = get_data(hp.data, r)  # thchs30
         # fpaths, texts = get_keda_data(hp.data, r)  # keda api
         # fpaths, texts = get_thchs30_data(hp.data, r)
-        fpaths, texts = get_blizzard_data(hp.data, r)
+        fpaths, texts = get_nkenne_data(hp.data, r)
         print('Finish loading data')
         self.fpaths = fpaths
         self.texts = texts
@@ -194,6 +194,31 @@ def get_LJ_data(data_dir, r):
 
     return wav_paths[r], texts[r]
 
+def get_nkenne_data(data_dir, r):
+    csv_path = os.path.join(data_dir, '/Users/mac/nkenne_test/TTS/GST-tacotron/data/train/cleaned_stt.csv')  # Replace 'your_csv_filename.csv' with your CSV filename
+    audio_dir = "/Users/mac/nkenne_test/TTS/GST-tacotron/data/train/audio"
+
+    data = pd.read_csv(csv_path)  # Read the CSV file using pandas
+
+    wav_paths = []
+    texts = []
+
+    for index, row in data.iterrows():
+        wav_filename = row['id'] + '.wav'  # Construct the WAV file name from 'id' column
+        wav_path = os.path.join(audio_dir, wav_filename)  # Create the full path to the audio file
+        wav_paths.append(wav_path)
+
+        text = row['yoruba']
+        text = text_normalize(text) + 'E'  # Normalize text and add 'E' as in your original function
+        text = [hp.char2idx[c] for c in text]  # Convert characters to indices
+        text = torch.Tensor(text).type(torch.LongTensor)  # Convert to a PyTorch tensor
+        texts.append(text)
+
+    for wav in wav_paths[-20:]:
+        print(wav)
+
+    return wav_paths[r], texts[r]
+
 def get_blizzard_data(data_dir, r):
     file_list = './filelists/bliz13_audio_text_train_filelist.txt'
 
@@ -238,7 +263,7 @@ def get_eval_data(text, wav_path):
 
 
 if __name__ == '__main__':
-    dataset = LJDataset()
+    dataset = SpeechDataset()
     loader = DataLoader(dataset=dataset, batch_size=8, collate_fn=collate_fn)
 
     for batch in loader:

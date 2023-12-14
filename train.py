@@ -43,7 +43,8 @@ def train(log_dir, dataset_size, start_epoch=0):
     f.write(msg + '\n')
 
     # load model
-    model = Tacotron().cuda()#.to(device)
+    #model = Tacotron().cuda()#.to(device)
+    model = Tacotron()#.cuda()#.to(device)
     if torch.cuda.device_count() > 1:
         model = DataParallel(model)
     if start_epoch != 0:
@@ -113,6 +114,7 @@ def train(log_dir, dataset_size, start_epoch=0):
             mel_loss, mag_loss = criterion(mels[:, 1:, :], mels_hat, mags, mags_hat)
             loss = mel_loss + mag_loss
             loss.backward()
+            print(f"Step {step}: Loss - {loss.item()}, Mel Loss - {mel_loss.item()}, Mag Loss - {mag_loss.item()}")
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)  # clip gradients
             optimizer.step()
             # scheduler.step()
